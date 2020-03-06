@@ -1,21 +1,57 @@
-mod error;
-mod image;
+#![allow(dead_code)]
 
-use crate::image::{Rgba, RgbaImage};
+mod bvh;
+mod color;
+mod error;
+mod geometry;
+mod integrator;
+mod image;
+mod math;
+
+use crate::geometry::*;
+use crate::image::*;
+use crate::integrator::{Integrator, PathTracer};
+use crate::math::*;
 
 fn main() {
-    let path = std::env::args().nth(1).unwrap();
+    let path = if let Some(path) = std::env::args().nth(1) {
+        path
+    } else {
+        eprintln!("usage: sketchbook <path/to/output.png>");
+        return;
+    };
 
     println!("output path: {}", path);
 
-    let mut image = RgbaImage::new(512, 512);
+    let mut image = RgbaImage::new(1024, 512);
+
+    let sphere = Sphere {
+        center: Vector3::new(0.0, 0.0, 2.0),
+        radius: 0.5,
+    };
+
+    let origin = Vector3::new(0.0, 0.0, 0.0);
+    let top_left = Vector3::new(-2.0, 1.0, 1.0);
+
+    let integrator = PathTracer::new();
 
     for y in 0..image.height() {
         for x in 0..image.width() {
-            image.set_pixel(x, y, Rgba::rgb(x as u8, y as u8, 255));
+            let u = x as Float / image.width() as Float;
+            let v = y as Float / image.height() as Float;
+
+            let direction = Vector3::new(top_left.x + 4.0 * u, top_left.y - 2.0 * v, 1.0);
+            let ray = Ray {
+                origin,
+                direction: direction.normalize(),
+            };
+
+            let color = integrator.integrate(&ray);
+            image.set_pixel(x, y, color.into());
         }
     }
 
+    println!("saving");
     image.save(path).unwrap();
 
     println!("Hello, world!");
