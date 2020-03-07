@@ -6,22 +6,21 @@ use crate::math::*;
 
 pub trait Object {
     fn hit(&self, ray: &Ray) -> Option<Hit>;
+    fn normal_at(&self, point: Vector3) -> Vector3;
 }
 
-pub struct Hit {
+pub struct Hit<'o> {
     ray: Ray,
     t: Float,
-    point: Vector3,
-    normal: Vector3,
+    object: &'o dyn Object,
 }
 
-impl Hit {
-    pub fn new(ray: &Ray, t: Float, normal: Vector3) -> Hit {
+impl<'o> Hit<'o> {
+    pub fn new(ray: &Ray, t: Float, object: &'o dyn Object) -> Hit<'o> {
         Hit {
             ray: ray.clone(),
             t,
-            point: ray.point_at(t),
-            normal:
+            object,
         }
     }
 }

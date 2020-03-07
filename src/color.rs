@@ -4,6 +4,7 @@ use std::ops::{Add, Sub, Mul, Div};
 
 const GAMMA: Float = 2.2;
 
+#[derive(Clone, Copy)]
 pub struct Color {
 	pub r: Float,
 	pub g: Float,

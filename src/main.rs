@@ -6,11 +6,12 @@ mod error;
 mod geometry;
 mod integrator;
 mod image;
+mod material;
 mod math;
 
 use crate::geometry::*;
 use crate::image::*;
-use crate::integrator::{Integrator, PathTracer};
+use crate::integrator::{Integrator, PrimaryRayIntegrator};
 use crate::math::*;
 
 fn main() {
@@ -33,7 +34,7 @@ fn main() {
     let origin = Vector3::new(0.0, 0.0, 0.0);
     let top_left = Vector3::new(-2.0, 1.0, 1.0);
 
-    let integrator = PathTracer::new();
+    let integrator = PrimaryRayIntegrator::new();
 
     for y in 0..image.height() {
         for x in 0..image.width() {
@@ -46,8 +47,8 @@ fn main() {
                 direction: direction.normalize(),
             };
 
-            let color = integrator.integrate(&ray);
-            image.set_pixel(x, y, color.into());
+            let color = integrator.integrate(&ray, &sphere);
+            image.set_pixel(x, y, color.0.into());
         }
     }
 

@@ -18,19 +18,19 @@ impl Object for Sphere {
 
         let t = -b - h;
         if t > 0.0 {
-            return Some(Hit {
-                ray: ray.clone(),
-                t,
-                normal: Vector3::new(0.0, 0.0, 0.0),
-            });
+            return Some(Hit::new(ray, t, self));
         }
 
         let t = -b + h;
 
         if t > 0.0 {
-            return Some(Hit::new(ray: ray.clone(), t, normal: Vector3::new(0.0, 0.0, 0.0));
+            return Some(Hit::new(ray, t, self));
         }
 
         None
+    }
+
+    fn normal_at(&self, point: Vector3) -> Vector3 {
+        (point - self.center).normalize()
     }
 }
