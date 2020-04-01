@@ -1,20 +1,22 @@
 use crate::math::*;
-use std::ops::{Add, Sub, Mul, Div};
+use std::ops::{Add, Sub, Mul, Div, Index, IndexMut};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector3 {
-    pub x: Float,
-    pub y: Float,
-    pub z: Float,
+	pub x: Float,
+	pub y: Float,
+	pub z: Float,
 }
 
 impl Vector3 {
-    pub fn new(x: Float, y: Float, z: Float) -> Vector3 {
-        Vector3 { x, y, z }
-    }
+	pub const ZERO: Vector3 = Vector3 { x: 0.0, y: 0.0, z: 0.0 };
 
-    pub fn dot(&self, rhs: Vector3) -> Float {
-        self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
+	pub fn new(x: Float, y: Float, z: Float) -> Vector3 {
+		Vector3 { x, y, z }
+	}
+
+	pub fn dot(&self, rhs: Vector3) -> Float {
+		self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
 	}
 
 	pub fn normalize(&self) -> Vector3 {
@@ -53,5 +55,26 @@ impl Div<Float> for Vector3 {
 	fn div(self, rhs: Float) -> Vector3 {
 		let reciprocal = 1.0 / rhs;
 		Vector3::new(self.x * reciprocal, self.y * reciprocal, self.z * reciprocal)
+	}
+}
+
+impl Index<Axis> for Vector3 {
+	type Output = Float;
+	fn index(&self, axis: Axis) -> &Float {
+		match axis {
+			Axis::X => &self.x,
+			Axis::Y => &self.y,
+			Axis::Z => &self.z,
+		}
+	}
+}
+
+impl IndexMut<Axis> for Vector3 {
+	fn index_mut(&mut self, axis: Axis) -> &mut Float {
+		match axis {
+			Axis::X => &mut self.x,
+			Axis::Y => &mut self.y,
+			Axis::Z => &mut self.z,
+		}
 	}
 }

@@ -1,7 +1,8 @@
 use crate::color::Color;
-use crate::geometry::{Ray, Object};
+use crate::shape::Shape;
 use crate::integrator::Integrator;
 use crate::math::*;
+use crate::accelerator::Accelerator;
 
 pub struct PrimaryRayIntegrator;
 
@@ -13,8 +14,8 @@ impl PrimaryRayIntegrator {
 
 impl Integrator for PrimaryRayIntegrator {
 	type Output = (Color, Vector3);
-	fn integrate<S: Object>(&self, ray: &Ray, scene: &S) -> (Color, Vector3) {
-		let hit = scene.hit(ray);
+	fn integrate<A: Accelerator>(&self, ray: &Ray, accel: &A) -> (Color, Vector3) {
+		let hit = accel.trace(ray);
 		if let None = hit {
 			return (Color::new(1.0, 1.0, 1.0), Vector3::new(0.0, 0.0, 0.0));
 		}

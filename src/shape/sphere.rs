@@ -1,4 +1,4 @@
-use crate::geometry::*;
+use crate::shape::*;
 use crate::math::*;
 
 pub struct Sphere {
@@ -6,7 +6,7 @@ pub struct Sphere {
     pub radius: Float,
 }
 
-impl Object for Sphere {
+impl Shape for Sphere {
     fn hit(&self, ray: &Ray) -> Option<Hit> {
         let oc = ray.origin - self.center;
         let b = oc.dot(ray.direction);
@@ -32,5 +32,25 @@ impl Object for Sphere {
 
     fn normal_at(&self, point: Vector3) -> Vector3 {
         (point - self.center).normalize()
+    }
+
+    fn bounding_box(&self) -> Aabb {
+        let min = Vector3 {
+            x: self.center.x - self.radius,
+            y: self.center.y - self.radius,
+            z: self.center.z - self.radius,
+        };
+
+        let max = Vector3 {
+            x: self.center.x + self.radius,
+            y: self.center.y + self.radius,
+            z: self.center.z + self.radius,
+        };
+
+        Aabb::new(min, max)
+    }
+
+    fn surface_area(&self) -> Float {
+        4.0 * PI * self.radius * self.radius
     }
 }

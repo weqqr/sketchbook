@@ -8,6 +8,14 @@ pub fn min(a: Float, b: Float) -> Float {
     }
 }
 
+pub fn max(a: Float, b: Float) -> Float {
+    if a > b {
+        a
+    } else {
+        b
+    }
+}
+
 pub fn clamp(value: Float, min: Float, max: Float) -> Float {
     if value < min {
         min
