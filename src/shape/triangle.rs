@@ -1,5 +1,5 @@
-use crate::material::Material;
 use crate::math::*;
+use crate::scene::MaterialId;
 use crate::shape::*;
 
 pub struct Triangle {
@@ -12,6 +12,8 @@ pub struct Triangle {
     pub na: Vector3,
     pub nb: Vector3,
     pub nc: Vector3,
+
+    pub material: MaterialId,
 }
 
 impl Shape for Triangle {
@@ -48,8 +50,8 @@ impl Shape for Triangle {
         unimplemented!()
     }
 
-    fn material_at(&self, point: Vector3) -> &dyn Material {
-        unimplemented!()
+    fn material(&self) -> MaterialId {
+        self.material
     }
 
     fn bounding_box(&self) -> Aabb {

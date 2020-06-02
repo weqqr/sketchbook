@@ -1,10 +1,11 @@
-use crate::material::Material;
 use crate::math::*;
+use crate::scene::MaterialId;
 use crate::shape::*;
 
 pub struct Sphere {
     pub center: Vector3,
     pub radius: Float,
+    pub material: MaterialId,
 }
 
 impl Shape for Sphere {
@@ -35,8 +36,8 @@ impl Shape for Sphere {
         (point - self.center).normalize()
     }
 
-    fn material_at(&self, point: Vector3) -> &dyn Material {
-        unimplemented!()
+    fn material(&self) -> MaterialId {
+        self.material
     }
 
     fn bounding_box(&self) -> Aabb {

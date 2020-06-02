@@ -12,34 +12,48 @@ mod scene;
 mod shape;
 
 use crate::accelerator::*;
+use crate::color::*;
 use crate::image::*;
 use crate::integrator::{Integrator, PrimaryRayIntegrator};
+use crate::material::*;
 use crate::math::*;
 use crate::scene::*;
 use crate::shape::*;
 
 fn build_scene() -> Scene {
     let mut scene = Scene::new();
-    scene.add(Sphere {
+
+    let red = scene.add_material(Lambertian {
+        color: Color::new(1.0, 0.0, 0.0),
+    });
+
+    let green = scene.add_material(Lambertian {
+        color: Color::new(0.0, 1.0, 0.0),
+    });
+
+    scene.add_shape(Sphere {
         center: Vector3::new(0.0, 0.0, 2.0),
         radius: 0.5,
+        material: red,
     });
-    scene.add(Sphere {
+    scene.add_shape(Sphere {
         center: Vector3::new(0.6, 0.5, 3.0),
         radius: 0.5,
+        material: red,
     });
-    scene.add(Sphere {
+    scene.add_shape(Sphere {
         center: Vector3::new(0.5, -0.3, 0.3),
         radius: 0.5,
+        material: red,
     });
-    scene.add(Triangle {
+    scene.add_shape(Triangle {
         a: Vector3::new(0.0, 0.0, 0.0),
         b: Vector3::new(0.0, 1.0, 0.0),
         c: Vector3::new(1.0, 0.0, 0.0),
-
         na: Vector3::new(0.0, 0.0, 1.0),
         nb: Vector3::new(0.0, 0.0, 1.0),
         nc: Vector3::new(0.0, 0.0, 1.0),
+        material: green,
     });
 
     scene
@@ -75,7 +89,7 @@ fn main() {
                 direction: direction.normalize(),
             };
 
-            let color = integrator.integrate(&ray, &accel);
+            let color = integrator.integrate(&scene, &ray, &accel);
             image.set_pixel(x, y, color.0.into());
         }
     }

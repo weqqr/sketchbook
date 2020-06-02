@@ -6,9 +6,10 @@ pub use primary_ray::*;
 
 use crate::accelerator::Accelerator;
 use crate::math::Ray;
+use crate::scene::Scene;
 use crate::shape::Shape;
 
 pub trait Integrator {
 	type Output;
-	fn integrate<A: Accelerator>(&self, ray: &Ray, accel: &A) -> Self::Output;
+	fn integrate<A: Accelerator>(&self, scene: &Scene, ray: &Ray, accel: &A) -> Self::Output;
 }

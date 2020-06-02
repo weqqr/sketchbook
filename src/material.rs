@@ -7,7 +7,7 @@ pub trait Material {
 }
 
 pub struct Lambertian {
-	color: Color,
+	pub color: Color,
 }
 
 impl Material for Lambertian {

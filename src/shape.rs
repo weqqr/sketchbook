@@ -5,12 +5,12 @@ pub use self::triangle::*;
 pub use self::sphere::*;
 
 use crate::math::*;
-use crate::material::Material;
+use crate::scene::MaterialId;
 
 pub trait Shape {
     fn hit(&self, ray: &Ray) -> Option<Hit>;
     fn normal_at(&self, point: Vector3) -> Vector3;
-    fn material_at(&self, point: Vector3) -> &dyn Material;
+    fn material(&self) -> MaterialId;
     fn bounding_box(&self) -> Aabb;
     fn surface_area(&self) -> Float;
 }
