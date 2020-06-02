@@ -1,5 +1,5 @@
-use crate::shape::Shape;
 use crate::math::*;
+use crate::shape::Shape;
 /*
 pub struct KdTreeNode<'a> {
     bounding_box: Aabb,

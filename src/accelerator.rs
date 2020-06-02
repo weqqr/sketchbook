@@ -1,5 +1,5 @@
-use crate::shape::{Shape, Hit};
 use crate::math::Ray;
+use crate::shape::{Shape, Hit};
 
 pub mod kd;
 pub mod linear;

@@ -4,9 +4,9 @@ pub mod primary_ray;
 pub use path_tracer::*;
 pub use primary_ray::*;
 
-use crate::shape::Shape;
-use crate::math::Ray;
 use crate::accelerator::Accelerator;
+use crate::math::Ray;
+use crate::shape::Shape;
 
 pub trait Integrator {
 	type Output;

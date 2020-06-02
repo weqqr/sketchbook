@@ -1,8 +1,8 @@
+use crate::accelerator::Accelerator;
 use crate::color::Color;
-use crate::shape::Shape;
 use crate::integrator::Integrator;
 use crate::math::*;
-use crate::accelerator::Accelerator;
+use crate::shape::Shape;
 
 pub struct PrimaryRayIntegrator;
 

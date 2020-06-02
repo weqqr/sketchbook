@@ -1,6 +1,6 @@
-use crate::shape::*;
-use crate::math::*;
 use crate::material::Material;
+use crate::math::*;
+use crate::shape::*;
 
 pub struct Sphere {
     pub center: Vector3,

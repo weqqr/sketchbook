@@ -20,7 +20,7 @@ impl Aabb {
     }
 
     pub fn intersect_ray(&self, ray: &Ray) -> bool {
-        false
+        unimplemented!()
     }
 
     pub fn min(&self) -> Vector3 {

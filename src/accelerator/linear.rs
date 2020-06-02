@@ -1,7 +1,7 @@
 use crate::accelerator::Accelerator;
-use crate::shape::{Shape, Hit};
 use crate::math::*;
 use crate::scene::*;
+use crate::shape::{Shape, Hit};
 
 pub struct LinearAccelerator<'a> {
     shapes: Vec<&'a dyn Shape>,

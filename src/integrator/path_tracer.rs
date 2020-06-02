@@ -1,5 +1,4 @@
 use crate::color::Color;
-use crate::math::Ray;
 use crate::integrator::Integrator;
 use crate::math::*;
 /*

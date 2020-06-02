@@ -1,7 +1,7 @@
 use crate::error::*;
 use std::fs::File;
-use std::path::Path;
 use std::io::BufWriter;
+use std::path::Path;
 
 pub struct Rgba {
     pub r: u8,

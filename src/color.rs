@@ -1,5 +1,5 @@
-use crate::math::*;
 use crate::image::Rgba;
+use crate::math::*;
 use std::ops::{Add, Sub, Mul, Div};
 
 const GAMMA: Float = 2.2;

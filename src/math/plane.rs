@@ -1,5 +1,5 @@
-use crate::shape::*;
 use crate::math::*;
+use crate::shape::*;
 
 pub struct Plane {
     pub point: Vector3,
