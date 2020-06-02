@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 #![allow(dead_code)]
 
 mod accelerator;
@@ -8,12 +9,14 @@ mod integrator;
 mod image;
 mod material;
 mod math;
+mod scene;
 
 use crate::shape::*;
 use crate::image::*;
 use crate::integrator::{Integrator, PrimaryRayIntegrator};
 use crate::math::*;
 use crate::accelerator::*;
+use crate::scene::*;
 
 fn main() {
     let path = if let Some(path) = std::env::args().nth(1) {
@@ -32,23 +35,21 @@ fn main() {
 
     let integrator = PrimaryRayIntegrator::new();
 
-    let mut objects: Vec<Box<dyn Shape>> = Vec::new();
-    objects.push(Box::new(Sphere {
+    let mut scene = Scene::new();
+    scene.add(Sphere {
         center: Vector3::new(0.0, 0.0, 2.0),
         radius: 0.5,
-    }));
-    objects.push(Box::new(Sphere {
+    });
+    scene.add(Sphere {
         center: Vector3::new(0.6, 0.5, 3.0),
         radius: 0.5,
-    }));
-    objects.push(Box::new(Sphere {
+    });
+    scene.add(Sphere {
         center: Vector3::new(0.5, -0.3, 0.3),
         radius: 1.5,
-    }));
+    });
 
-    let object_refs = objects.iter().map(|o| o.as_ref()).collect();
-
-    let accel = LinearAccelerator::new(object_refs);
+    let accel = LinearAccelerator::new(&scene);
 
     for y in 0..image.height() {
         for x in 0..image.width() {

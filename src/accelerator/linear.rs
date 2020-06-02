@@ -1,14 +1,17 @@
 use crate::accelerator::Accelerator;
 use crate::shape::{Shape, Hit};
 use crate::math::*;
+use crate::scene::*;
 
 pub struct LinearAccelerator<'a> {
     shapes: Vec<&'a dyn Shape>,
 }
 
 impl<'a> LinearAccelerator<'a> {
-    pub fn new(shapes: Vec<&'a dyn Shape>) -> Self {
-        Self { shapes }
+    pub fn new(scene: &'a Scene) -> Self {
+        Self {
+            shapes: scene.shapes().collect(),
+        }
     }
 }
 

@@ -3,7 +3,7 @@ use crate::math::*;
 
 pub trait Material {
 	fn albedo(&self) -> Color;
-	fn brdf(&self, wi: Vector3, wo: Vector3) -> Color;
+	fn brdf(&self, n: Vector3, wi: Vector3, wo: Vector3) -> Color;
 }
 
 pub struct Lambertian {
@@ -15,7 +15,7 @@ impl Material for Lambertian {
 		self.color.clone()
 	}
 
-	fn brdf(&self, wi: Vector3, wo: Vector3) -> Color {
-		self.color.clone()
+	fn brdf(&self, n: Vector3, wi: Vector3, wo: Vector3) -> Color {
+		self.color.clone() / PI
 	}
 }

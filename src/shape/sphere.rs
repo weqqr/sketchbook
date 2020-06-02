@@ -1,5 +1,6 @@
 use crate::shape::*;
 use crate::math::*;
+use crate::material::Material;
 
 pub struct Sphere {
     pub center: Vector3,
@@ -32,6 +33,10 @@ impl Shape for Sphere {
 
     fn normal_at(&self, point: Vector3) -> Vector3 {
         (point - self.center).normalize()
+    }
+
+    fn material_at(&self, point: Vector3) -> &dyn Material {
+        unimplemented!()
     }
 
     fn bounding_box(&self) -> Aabb {
