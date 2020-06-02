@@ -32,6 +32,15 @@ fn build_scene() -> Scene {
         center: Vector3::new(0.5, -0.3, 0.3),
         radius: 0.5,
     });
+    scene.add(Triangle {
+        a: Vector3::new(0.0, 0.0, 0.0),
+        b: Vector3::new(0.0, 1.0, 0.0),
+        c: Vector3::new(1.0, 0.0, 0.0),
+
+        na: Vector3::new(0.0, 0.0, 1.0),
+        nb: Vector3::new(0.0, 0.0, 1.0),
+        nc: Vector3::new(0.0, 0.0, 1.0),
+    });
 
     scene
 }

@@ -19,6 +19,14 @@ impl Vector3 {
 		self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
 	}
 
+	pub fn cross(&self, rhs: Vector3) -> Vector3 {
+		Vector3 {
+			x: self.y * rhs.z - self.z * rhs.y,
+			y: self.z * rhs.x - self.x * rhs.z,
+			z: self.x * rhs.y - self.y * rhs.x,
+		}
+	}
+
 	pub fn normalize(&self) -> Vector3 {
 		let len = self.len();
 		*self / len
@@ -26,6 +34,22 @@ impl Vector3 {
 
 	pub fn len(&self) -> Float {
 		(self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
+	}
+
+	pub fn min(&self, rhs: Vector3) -> Vector3 {
+		Vector3 {
+			x: self.x.min(rhs.x),
+			y: self.y.min(rhs.y),
+			z: self.z.min(rhs.z),
+		}
+	}
+
+	pub fn max(&self, rhs: Vector3) -> Vector3 {
+		Vector3 {
+			x: self.x.max(rhs.x),
+			y: self.y.max(rhs.y),
+			z: self.z.max(rhs.z),
+		}
 	}
 }
 

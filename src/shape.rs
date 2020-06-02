@@ -1,5 +1,7 @@
+pub mod triangle;
 pub mod sphere;
 
+pub use self::triangle::*;
 pub use self::sphere::*;
 
 use crate::math::*;
