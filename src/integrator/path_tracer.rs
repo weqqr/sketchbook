@@ -1,45 +1,56 @@
+use crate::accelerator::*;
 use crate::color::Color;
 use crate::integrator::Integrator;
 use crate::math::*;
-/*
+use crate::random::*;
+use crate::scene::*;
+
 pub struct PathTracer {
 	bounces: usize,
+	rng: RandomGenerator,
 }
 
 impl PathTracer {
 	pub fn new(bounces: usize) -> PathTracer {
 		PathTracer {
 			bounces,
+			rng: RandomGenerator::new(),
 		}
 	}
 
-	pub fn trace(&self) {
-	}
-}
+	pub fn trace<A: Accelerator>(&mut self, scene: &Scene, ray: &Ray, accel: &A, bounce: usize) -> (Color, Vector3) {
+		if bounce >= self.bounces {
+			return (Color::new(0.0, 0.0, 0.0), Vector3::new(0.0, 0.0, 0.0));
+		}
+		let hit = accel.trace(ray);
+		let hit = if let Some(hit) = hit {
+			hit
+		} else {
+			return (Color::new(2.0, 2.0, 2.0), Vector3::new(0.0, 0.0, 0.0));
+		};
 
-fn lambertian(wi: Vector3, wo: Vector3) -> Color {
-	Color::new(1.0, 1.0, 1.0) / PI
+		let point = hit.point();
+		let normal = hit.shape.normal_at(point);
+		let material = scene.get_material(hit.shape.material());
+
+		let next_ray = Ray {
+			origin: point + normal * 0.01,
+			direction: (normal + Vector3::random_point_on_unit_sphere(&mut self.rng)).normalize(),
+		};
+
+		let next_color = self.trace(scene, &next_ray, accel, bounce + 1).0;
+
+		let wi = ray.direction;
+		let wo = next_ray.direction;
+		let color = material.brdf(normal, wi, wo) * next_color;
+
+		(color, normal)
+	}
 }
 
 impl Integrator for PathTracer {
-	type Output = Color;
-	fn integrate<S: Hitabl>(&self, ray: &Ray, scene: S) -> Color {
-		let hit = scene.hit(ray);
-		if let None = hit {
-			return Color::new(1.0, 1.0, 1.0);
-		}
-
-		let wi = ray.direction;
-		let wo = hit.point + hit.normal + Vector3::random_sphere();
-
-		let next_color = self.trace();
-		let brdf = lambertian(wi, wo) * next_color;
-
-		Color {
-			r: 1.0,
-			g: 0.0,
-			b: 0.0,
-		}
+	type Output = (Color, Vector3);
+	fn integrate<A: Accelerator>(&mut self, scene: &Scene, ray: &Ray, accel: &A) -> (Color, Vector3) {
+		self.trace(scene, ray, accel, 0)
 	}
 }
-*/

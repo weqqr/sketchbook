@@ -1,6 +1,8 @@
+pub mod plane;
 pub mod triangle;
 pub mod sphere;
 
+// pub use self::plane::*;
 pub use self::triangle::*;
 pub use self::sphere::*;
 
@@ -28,5 +30,9 @@ impl<'shapes> Hit<'shapes> {
             t,
             shape,
         }
+    }
+
+    pub fn point(&self) -> Vector3 {
+        self.ray.point_at(self.t)
     }
 }

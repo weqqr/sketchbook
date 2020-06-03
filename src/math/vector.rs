@@ -1,4 +1,5 @@
 use crate::math::*;
+use crate::random::*;
 use std::ops::{Add, Sub, Mul, Div, Index, IndexMut};
 
 #[derive(Copy, Clone, Debug)]
@@ -50,6 +51,14 @@ impl Vector3 {
 			y: self.y.max(rhs.y),
 			z: self.z.max(rhs.z),
 		}
+	}
+
+	pub fn random_point_on_unit_sphere(rng: &mut RandomGenerator) -> Vector3 {
+		Vector3 {
+			x: rng.next_gaussian(),
+			y: rng.next_gaussian(),
+			z: rng.next_gaussian(),
+		}.normalize()
 	}
 }
 

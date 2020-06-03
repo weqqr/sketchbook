@@ -18,6 +18,8 @@ impl Shape for Sphere {
             return None;
         }
 
+        let h = h.sqrt();
+
         let t = -b - h;
         if t > 0.0 {
             return Some(Hit::new(ray, t, self));

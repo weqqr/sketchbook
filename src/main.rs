@@ -8,15 +8,17 @@ mod image;
 mod integrator;
 mod material;
 mod math;
+mod random;
 mod scene;
 mod shape;
 
 use crate::accelerator::*;
 use crate::color::*;
 use crate::image::*;
-use crate::integrator::{Integrator, PrimaryRayIntegrator};
+use crate::integrator::*;
 use crate::material::*;
 use crate::math::*;
+use crate::random::*;
 use crate::scene::*;
 use crate::shape::*;
 
@@ -31,29 +33,48 @@ fn build_scene() -> Scene {
         color: Color::new(0.0, 1.0, 0.0),
     });
 
+    let grey = scene.add_material(Lambertian {
+        color: Color::new(1.0, 1.0, 1.0),
+    });
+
+    let orange = scene.add_material(Lambertian {
+        color: Color::new(0.9, 0.7, 0.1),
+    });
+
     scene.add_shape(Sphere {
-        center: Vector3::new(0.0, 0.0, 2.0),
-        radius: 0.5,
+        center: Vector3::new(1.0, 0.5, 2.0),
+        radius: 1.0,
         material: red,
     });
     scene.add_shape(Sphere {
-        center: Vector3::new(0.6, 0.5, 3.0),
+        center: Vector3::new(0.0, 0.0, 3.0),
         radius: 0.5,
-        material: red,
-    });
-    scene.add_shape(Sphere {
-        center: Vector3::new(0.5, -0.3, 0.3),
-        radius: 0.5,
-        material: red,
-    });
-    scene.add_shape(Triangle {
-        a: Vector3::new(0.0, 0.0, 0.0),
-        b: Vector3::new(0.0, 1.0, 0.0),
-        c: Vector3::new(1.0, 0.0, 0.0),
-        na: Vector3::new(0.0, 0.0, 1.0),
-        nb: Vector3::new(0.0, 0.0, 1.0),
-        nc: Vector3::new(0.0, 0.0, 1.0),
         material: green,
+    });
+    scene.add_shape(Sphere {
+        center: Vector3::new(-2.0, 0.0, 0.3),
+        radius: 0.5,
+        material: red,
+    });
+    /*scene.add_shape(Triangle {
+        a: Vector3::new(-1.0, 0.5, 0.5),
+        b: Vector3::new(-2.0, 1.3, 0.0),
+        c: Vector3::new(-1.8, 0.8, 0.3),
+        na: Vector3::new(0.0, 1.0, 0.0),
+        nb: Vector3::new(0.0, 1.0, 0.0),
+        nc: Vector3::new(0.0, 1.0, 0.0),
+        material: orange,
+    });*/
+    scene.add_shape(crate::shape::plane::Plane {
+        point: Vector3::new(0.0, -0.5, 0.0),
+        normal: Vector3::new(0.0, 1.0, 0.0),
+        material: grey,
+    });
+
+    scene.add_shape(crate::shape::plane::Plane {
+        point: Vector3::new(-2.0, -0.5, 0.0),
+        normal: Vector3::new(1.0, 0.0, 0.0),
+        material: red,
     });
 
     scene
@@ -74,23 +95,37 @@ fn main() {
     let origin = Vector3::new(0.0, 0.0, -2.0);
     let top_left = Vector3::new(-2.0, 1.0, 1.0);
 
-    let integrator = PrimaryRayIntegrator::new();
+    let mut integrator = PathTracer::new(10);
     let scene = build_scene();
     let accel = LinearAccelerator::new(&scene);
 
+    let sample_count = 64;
+
+    let mut rng = RandomGenerator::new();
+
     for y in 0..image.height() {
         for x in 0..image.width() {
-            let u = x as Float / image.width() as Float;
-            let v = y as Float / image.height() as Float;
+            let width = image.width() as Float;
+            let height = image.height() as Float;
 
-            let direction = Vector3::new(top_left.x + 4.0 * u, top_left.y - 2.0 * v, 1.0);
-            let ray = Ray {
-                origin,
-                direction: direction.normalize(),
-            };
+            let u = x as Float / width;
+            let v = y as Float / height;
 
-            let color = integrator.integrate(&scene, &ray, &accel);
-            image.set_pixel(x, y, color.0.into());
+            let mut color = Color::new(0.0, 0.0, 0.0);
+
+            for _ in 0..sample_count {
+                let u = u + rng.unit() / width;
+                let v = v + rng.unit() / height;
+
+                let direction = Vector3::new(top_left.x + 4.0 * u, top_left.y - 2.0 * v, 1.0);
+                let ray = Ray {
+                    origin,
+                    direction: direction.normalize(),
+                };
+
+                color = color + integrator.integrate(&scene, &ray, &accel).0;
+            }
+            image.set_pixel(x, y, (color / sample_count as f64).into());
         }
     }
 

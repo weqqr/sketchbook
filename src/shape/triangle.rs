@@ -47,7 +47,7 @@ impl Shape for Triangle {
     }
 
     fn normal_at(&self, point: Vector3) -> Vector3 {
-        unimplemented!()
+        (self.b - self.a).cross(self.c - self.a).normalize()
     }
 
     fn material(&self) -> MaterialId {

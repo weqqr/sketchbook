@@ -15,7 +15,7 @@ impl PrimaryRayIntegrator {
 
 impl Integrator for PrimaryRayIntegrator {
 	type Output = (Color, Vector3);
-	fn integrate<A: Accelerator>(&self, scene: &Scene, ray: &Ray, accel: &A) -> (Color, Vector3) {
+	fn integrate<A: Accelerator>(&mut self, scene: &Scene, ray: &Ray, accel: &A) -> (Color, Vector3) {
 		let hit = accel.trace(ray);
 		let hit = if let Some(hit) = hit {
 			hit
