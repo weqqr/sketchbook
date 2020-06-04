@@ -37,34 +37,38 @@ fn build_scene() -> Scene {
         color: Color::new(1.0, 1.0, 1.0),
     });
 
-    let orange = scene.add_material(Lambertian {
+    let yellow = scene.add_material(Lambertian {
         color: Color::new(0.9, 0.7, 0.1),
+    });
+
+    let light = scene.add_material(LightEmitter {
+        color: Color::new(10.0, 10.0, 10.0),
     });
 
     scene.add_shape(Sphere {
         center: Vector3::new(1.0, 0.5, 2.0),
         radius: 1.0,
-        material: red,
+        material: green,
     });
     scene.add_shape(Sphere {
         center: Vector3::new(0.0, 0.0, 3.0),
         radius: 0.5,
-        material: green,
-    });
-    scene.add_shape(Sphere {
-        center: Vector3::new(-2.0, 0.0, 0.3),
-        radius: 0.5,
         material: red,
     });
-    /*scene.add_shape(Triangle {
+    scene.add_shape(Sphere {
+        center: Vector3::new(-1.5, 0.0, 0.3),
+        radius: 0.5,
+        material: light,
+    });
+    scene.add_shape(Triangle {
         a: Vector3::new(-1.0, 0.5, 0.5),
         b: Vector3::new(-2.0, 1.3, 0.0),
         c: Vector3::new(-1.8, 0.8, 0.3),
         na: Vector3::new(0.0, 1.0, 0.0),
         nb: Vector3::new(0.0, 1.0, 0.0),
         nc: Vector3::new(0.0, 1.0, 0.0),
-        material: orange,
-    });*/
+        material: red,
+    });
     scene.add_shape(crate::shape::plane::Plane {
         point: Vector3::new(0.0, -0.5, 0.0),
         normal: Vector3::new(0.0, 1.0, 0.0),
@@ -74,10 +78,18 @@ fn build_scene() -> Scene {
     scene.add_shape(crate::shape::plane::Plane {
         point: Vector3::new(-2.0, -0.5, 0.0),
         normal: Vector3::new(1.0, 0.0, 0.0),
-        material: red,
+        material: yellow,
     });
 
     scene
+}
+
+fn normal_to_color(n: Vector3) -> Color {
+    Color {
+        r: n.x * 0.5 + 0.5,
+        g: n.y * 0.5 + 0.5,
+        b: n.z * 0.5 + 0.5,
+    }
 }
 
 fn main() {
@@ -95,7 +107,8 @@ fn main() {
     let origin = Vector3::new(0.0, 0.0, -2.0);
     let top_left = Vector3::new(-2.0, 1.0, 1.0);
 
-    let mut integrator = PathTracer::new(10);
+    let mut integrator = PathTracer::new(4);
+    // let mut integrator = PrimaryRayIntegrator::new();
     let scene = build_scene();
     let accel = LinearAccelerator::new(&scene);
 

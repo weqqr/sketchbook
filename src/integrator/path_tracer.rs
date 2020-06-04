@@ -34,7 +34,7 @@ impl PathTracer {
 		let material = scene.get_material(hit.shape.material());
 
 		let next_ray = Ray {
-			origin: point + normal * 0.01,
+			origin: point,
 			direction: (normal + Vector3::random_point_on_unit_sphere(&mut self.rng)).normalize(),
 		};
 
@@ -42,7 +42,7 @@ impl PathTracer {
 
 		let wi = ray.direction;
 		let wo = next_ray.direction;
-		let color = material.brdf(normal, wi, wo) * next_color;
+		let color = material.emittance() + material.brdf(normal, wi, wo) * next_color;
 
 		(color, normal)
 	}

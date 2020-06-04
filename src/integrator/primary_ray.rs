@@ -20,16 +20,11 @@ impl Integrator for PrimaryRayIntegrator {
 		let hit = if let Some(hit) = hit {
 			hit
 		} else {
-			return (Color::new(1.0, 1.0, 1.0), Vector3::new(0.0, 0.0, 0.0));
+			return (Color::new(1.0, 1.0, 1.0), Vector3::new(-1.0, -1.0, -1.0));
 		};
 
 		let albedo = scene.get_material(hit.shape.material()).albedo();
-
-		let normal = Vector3 {
-			x: 0.0,
-			y: 0.0,
-			z: 0.0,
-		};
+		let normal = hit.shape.normal_at(hit.point());
 
 		(albedo, normal)
 	}

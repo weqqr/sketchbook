@@ -25,7 +25,7 @@ impl Shape for Triangle {
         let pvec = ray.direction.cross(edge2);
         let det = edge1.dot(pvec);
 
-        if det > -EPSILON && det < EPSILON {
+        if det.abs() < EPSILON {
             return None;
         }
 
@@ -43,11 +43,15 @@ impl Shape for Triangle {
         }
 
         let t = edge2.dot(qvec) * inv_det;
+        if t < EPSILON {
+            return None;
+        }
+
         Some(Hit::new(ray, t, self))
     }
 
     fn normal_at(&self, point: Vector3) -> Vector3 {
-        (self.b - self.a).cross(self.c - self.a).normalize()
+        (self.c - self.a).cross(self.b - self.a).normalize()
     }
 
     fn material(&self) -> MaterialId {
