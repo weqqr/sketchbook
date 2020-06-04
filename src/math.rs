@@ -15,13 +15,13 @@ pub use std::f64::{EPSILON, MAX, consts::*};
 pub type Float = f64;
 
 pub fn cmp_float(a: &Float, b: &Float) -> std::cmp::Ordering {
-	if a < b {
-		std::cmp::Ordering::Less
-	} else if a > b {
-		std::cmp::Ordering::Greater
-	} else {
-		std::cmp::Ordering::Equal
-	}
+    if a < b {
+        std::cmp::Ordering::Less
+    } else if a > b {
+        std::cmp::Ordering::Greater
+    } else {
+        std::cmp::Ordering::Equal
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -31,7 +31,7 @@ pub struct Ray {
 }
 
 impl Ray {
-	pub fn point_at(&self, t: Float) -> Vector3 {
-		self.origin + self.direction * t
-	}
+    pub fn point_at(&self, t: Float) -> Vector3 {
+        self.origin + self.direction * t
+    }
 }

@@ -10,6 +10,6 @@ use crate::scene::Scene;
 use crate::shape::Shape;
 
 pub trait Integrator {
-	type Output;
-	fn integrate<A: Accelerator>(&mut self, scene: &Scene, ray: &Ray, accel: &A) -> Self::Output;
+    type Output;
+    fn integrate<A: Accelerator>(&mut self, scene: &Scene, ray: &Ray, accel: &A) -> Self::Output;
 }

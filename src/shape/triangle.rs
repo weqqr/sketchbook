@@ -51,7 +51,16 @@ impl Shape for Triangle {
     }
 
     fn normal_at(&self, point: Vector3) -> Vector3 {
-        (self.c - self.a).cross(self.b - self.a).normalize()
+        let p = point - self.a;
+        let u = self.b - self.a;
+        let v = self.c - self.a;
+
+        // Orient normal towards the incoming ray direction
+        if u.dot(p) > 0.0 {
+            v.cross(u).normalize()
+        } else {
+            u.cross(v).normalize()
+        }
     }
 
     fn material(&self) -> MaterialId {

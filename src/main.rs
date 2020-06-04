@@ -84,14 +84,6 @@ fn build_scene() -> Scene {
     scene
 }
 
-fn normal_to_color(n: Vector3) -> Color {
-    Color {
-        r: n.x * 0.5 + 0.5,
-        g: n.y * 0.5 + 0.5,
-        b: n.z * 0.5 + 0.5,
-    }
-}
-
 fn main() {
     let path = if let Some(path) = std::env::args().nth(1) {
         path
