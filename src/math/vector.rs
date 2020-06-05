@@ -53,6 +53,14 @@ impl Vector3 {
         }
     }
 
+    pub fn clamp(&self, min: Vector3, max: Vector3) -> Vector3 {
+        Vector3 {
+            x: clamp(self.x, min.x, max.x),
+            y: clamp(self.y, min.y, max.y),
+            z: clamp(self.z, min.z, max.z),
+        }
+    }
+
     pub fn random_point_on_unit_sphere(rng: &mut RandomGenerator) -> Vector3 {
         Vector3 {
             x: rng.next_gaussian(),

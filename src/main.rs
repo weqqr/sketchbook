@@ -6,6 +6,7 @@ mod color;
 mod error;
 mod image;
 mod integrator;
+mod io;
 mod material;
 mod math;
 mod random;
@@ -46,8 +47,8 @@ fn build_scene() -> Scene {
     });
 
     scene.add_shape(Sphere {
-        center: Vector3::new(1.0, 0.5, 2.0),
-        radius: 1.0,
+        center: Vector3::new(0.5, -0.2, -0.5),
+        radius: 0.3,
         material: green,
     });
     scene.add_shape(Sphere {
@@ -104,7 +105,7 @@ fn main() {
     let scene = build_scene();
     let accel = LinearAccelerator::new(&scene);
 
-    let sample_count = 64;
+    let sample_count = 512;
 
     let mut rng = RandomGenerator::new();
 
@@ -132,6 +133,7 @@ fn main() {
             }
             image.set_pixel(x, y, (color / sample_count as f64).into());
         }
+        println!("y={}, {} rays total", y, integrator.ray_count);
     }
 
     println!("saving");

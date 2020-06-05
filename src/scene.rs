@@ -1,9 +1,11 @@
+use crate::color::*;
 use crate::material::*;
 use crate::shape::*;
 
 pub struct Scene {
     materials: Vec<Box<dyn Material>>,
     shapes: Vec<Box<dyn Shape>>,
+    pub world_color: Color,
 }
 
 pub type MaterialId = usize;
@@ -13,6 +15,7 @@ impl Scene {
         Self {
             materials: Vec::new(),
             shapes: Vec::new(),
+            world_color: Color::new(0.3, 0.3, 0.3),
         }
     }
 

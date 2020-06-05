@@ -11,6 +11,9 @@ pub enum Error {
 
     #[error("PNG decoding error: {0}")]
     PngDecodingError(#[from] png::DecodingError),
+
+    #[error("HDR decoding error")]
+    HdrDecodingError,
 }
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;

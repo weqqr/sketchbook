@@ -15,14 +15,31 @@ impl Color {
     pub fn new(r: Float, g: Float, b: Float) -> Self {
         Color { r, g, b }
     }
+
+    pub fn clamp(&self, min: Color, max: Color) -> Color {
+        Color {
+            r: clamp(self.r, min.r, max.r),
+            g: clamp(self.g, min.g, max.g),
+            b: clamp(self.b, min.b, max.b),
+        }
+    }
 }
 
-fn gamma(component: Float) -> Float {
+fn srgb_to_linear(component: Float) -> Float {
     component.powf(2.2)
 }
 
-fn degamma(component: Float) -> Float {
+fn linear_to_srgb(component: Float) -> Float {
     component.powf(1.0 / 2.2)
+}
+
+fn aces(x: Color) -> Color {
+    let a = 2.51;
+    let b = Color::new(0.03, 0.03, 0.03);
+    let c = 2.43;
+    let d = Color::new(0.59, 0.59, 0.59);
+    let e = Color::new(0.14, 0.14, 0.14);
+    ((x*(x*a+b))/(x*(x*c+d)+e)).clamp(Color::new(0.0, 0.0, 0.0), Color::new(1.0, 1.0, 1.0))
 }
 
 impl From<Vector3> for Color {
@@ -38,19 +55,20 @@ impl From<Vector3> for Color {
 impl From<Rgba> for Color {
     fn from(c: Rgba) -> Color {
         Color {
-            r: gamma(c.r as Float / 255.0),
-            g: gamma(c.g as Float / 255.0),
-            b: gamma(c.b as Float / 255.0),
+            r: srgb_to_linear(c.r as Float / 255.0),
+            g: srgb_to_linear(c.g as Float / 255.0),
+            b: srgb_to_linear(c.b as Float / 255.0),
         }
     }
 }
 
 impl Into<Rgba> for Color {
     fn into(self) -> Rgba {
+        let c = aces(self);
         Rgba {
-            r: (degamma(clamp(self.r, 0.0, 1.0)) * 255.0) as u8,
-            g: (degamma(clamp(self.g, 0.0, 1.0)) * 255.0) as u8,
-            b: (degamma(clamp(self.b, 0.0, 1.0)) * 255.0) as u8,
+            r: (linear_to_srgb(c.r) * 255.0) as u8,
+            g: (linear_to_srgb(c.g) * 255.0) as u8,
+            b: (linear_to_srgb(c.b) * 255.0) as u8,
             a: 255,
         }
     }

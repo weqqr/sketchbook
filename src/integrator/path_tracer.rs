@@ -8,6 +8,7 @@ use crate::scene::*;
 pub struct PathTracer {
     bounces: usize,
     rng: RandomGenerator,
+    pub ray_count: usize,
 }
 
 impl PathTracer {
@@ -15,6 +16,7 @@ impl PathTracer {
         PathTracer {
             bounces,
             rng: RandomGenerator::new(),
+            ray_count: 0,
         }
     }
 
@@ -22,11 +24,12 @@ impl PathTracer {
         if bounce >= self.bounces {
             return (Color::new(0.0, 0.0, 0.0), Vector3::new(0.0, 0.0, 0.0));
         }
+        self.ray_count += 1;
         let hit = accel.trace(ray);
         let hit = if let Some(hit) = hit {
             hit
         } else {
-            return (Color::new(2.0, 2.0, 2.0), Vector3::new(0.0, 0.0, 0.0));
+            return (scene.world_color, Vector3::new(0.0, 0.0, 0.0));
         };
 
         let point = hit.point();

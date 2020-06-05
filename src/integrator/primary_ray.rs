@@ -20,7 +20,7 @@ impl Integrator for PrimaryRayIntegrator {
         let hit = if let Some(hit) = hit {
             hit
         } else {
-            return (Color::new(1.0, 1.0, 1.0), Vector3::new(-1.0, -1.0, -1.0));
+            return (scene.world_color, Vector3::new(-1.0, -1.0, -1.0));
         };
 
         let albedo = scene.get_material(hit.shape.material()).albedo();
