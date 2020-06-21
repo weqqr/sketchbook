@@ -1,3 +1,4 @@
+use crate::Stats;
 use crate::accelerator::Accelerator;
 use crate::color::Color;
 use crate::integrator::Integrator;
@@ -15,7 +16,8 @@ impl PrimaryRayIntegrator {
 
 impl Integrator for PrimaryRayIntegrator {
     type Output = (Color, Vector3);
-    fn integrate<A: Accelerator>(&mut self, scene: &Scene, ray: &Ray, accel: &A) -> (Color, Vector3) {
+    fn integrate<A: Accelerator>(&mut self, scene: &Scene, ray: &Ray, accel: &A, stats: &mut Stats) -> (Color, Vector3) {
+        stats.ray_count += 1;
         let hit = accel.trace(ray);
         let hit = if let Some(hit) = hit {
             hit

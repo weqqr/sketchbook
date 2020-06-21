@@ -22,6 +22,7 @@ use crate::math::*;
 use crate::random::*;
 use crate::scene::*;
 use crate::shape::*;
+use std::time::Instant;
 
 fn build_scene() -> Scene {
     let mut scene = Scene::new();
@@ -85,6 +86,10 @@ fn build_scene() -> Scene {
     scene
 }
 
+pub struct Stats {
+    pub ray_count: u64,
+}
+
 fn main() {
     let path = if let Some(path) = std::env::args().nth(1) {
         path
@@ -105,10 +110,15 @@ fn main() {
     let scene = build_scene();
     let accel = LinearAccelerator::new(&scene);
 
-    let sample_count = 512;
+    let sample_count = 64;
+
+    let mut stats = Stats {
+        ray_count: 0,
+    };
 
     let mut rng = RandomGenerator::new();
 
+    let start = Instant::now();
     for y in 0..image.height() {
         for x in 0..image.width() {
             let width = image.width() as Float;
@@ -129,12 +139,16 @@ fn main() {
                     direction: direction.normalize(),
                 };
 
-                color = color + integrator.integrate(&scene, &ray, &accel).0;
+                color = color + integrator.integrate(&scene, &ray, &accel, &mut stats).0;
             }
             image.set_pixel(x, y, (color / sample_count as f64).into());
         }
-        println!("y={}, {} rays total", y, integrator.ray_count);
+        println!("y={}, {} rays", y, stats.ray_count);
     }
+
+    let elapsed = Instant::now().duration_since(start).as_secs_f64();
+    let mrays_per_second = (stats.ray_count as f64) / elapsed / 1000000.0;
+    println!("{} MRays per second", mrays_per_second);
 
     println!("saving");
     image.save(path).unwrap();
